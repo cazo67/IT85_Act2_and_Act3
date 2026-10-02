@@ -1,0 +1,8 @@
+import { Badge, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/primitives"
+import { useAuth } from "@/features/auth/auth-context"
+
+export function ProfilePage() {
+  const { user } = useAuth()
+  if (!user) return null
+  return <div className="mx-auto max-w-3xl space-y-6"><header><p className="text-sm text-muted-foreground">Account</p><h1 className="text-2xl font-semibold">Profile</h1><p className="mt-1 text-sm text-muted-foreground">Account details returned by the current-user endpoint.</p></header><Card><CardHeader className="flex-row items-center gap-4"><div className="grid size-14 place-items-center rounded-full bg-primary/10 text-xl font-semibold text-primary">{user.name.slice(0,1).toUpperCase()}</div><div><CardTitle>{user.name}</CardTitle><CardDescription>{user.email}</CardDescription></div></CardHeader><CardContent><dl className="grid gap-4 sm:grid-cols-2"><div><dt className="text-xs uppercase text-muted-foreground">Role</dt><dd className="mt-1"><Badge>{user.role}</Badge></dd></div><div><dt className="text-xs uppercase text-muted-foreground">Status</dt><dd className="mt-1"><Badge tone={user.status === "ACTIVE" ? "success" : "danger"}>{user.status}</Badge></dd></div><div><dt className="text-xs uppercase text-muted-foreground">User ID</dt><dd className="mt-1 font-medium">{user.id}</dd></div><div><dt className="text-xs uppercase text-muted-foreground">Created</dt><dd className="mt-1 font-medium">{new Date(user.created_at).toLocaleString()}</dd></div></dl><p className="mt-6 border-t pt-4 text-sm text-muted-foreground">Profile editing and password changes are unavailable because the REST API has no self-service update endpoint.</p></CardContent></Card></div>
+}
