@@ -14,6 +14,8 @@ export type User = Timestamped & {
   status: Status
 }
 
+export type InstructorDirectoryEntry = Pick<User, "id" | "name" | "role" | "status">
+
 export type Program = Timestamped & {
   id: number
   code: string

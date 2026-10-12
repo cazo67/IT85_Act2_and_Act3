@@ -24,7 +24,7 @@ export type FieldDefinition = {
   type?: "text" | "email" | "number" | "date" | "textarea" | "status" | "year" | "reference"
   required?: boolean
   createOnly?: boolean
-  reference?: "programs" | "courses" | "terms" | "users" | "students" | "offerings" | "enrollments"
+  reference?: "programs" | "courses" | "terms" | "users" | "students" | "offerings" | "enrollments" | "instructors" | "studentAccounts"
   min?: number
   max?: number
   step?: number
@@ -84,7 +84,7 @@ export const resources: Record<string, ResourceDefinition> = {
       status,
       { key: "user_id", label: "Linked student user ID", type: "number" },
     ],
-    notes: "Account linking is optional. Only administrators can discover user IDs from the current API.",
+    notes: "Account linking is optional. Administrators can select a student account by name. Staff may enter a verified student user ID supplied by an administrator.",
   },
   programs: {
     key: "programs", title: "Programs", singular: "program", description: "Academic programs available to students.", service: programsService,
@@ -108,8 +108,7 @@ export const resources: Record<string, ResourceDefinition> = {
     key: "course-offerings", title: "Course Offerings", singular: "course offering", description: "Scheduled classes, instructors, rooms, and capacity.", service: offeringsService,
     managers: ["ADMIN", "STAFF"], deleters: ["ADMIN"],
     columns: [{ key: "course_id", label: "Course", reference: "courses" }, { key: "section", label: "Section" }, { key: "academic_term_id", label: "Term", reference: "terms" }, { key: "schedule", label: "Schedule" }, { key: "capacity", label: "Capacity" }, { key: "status", label: "Status" }],
-    fields: [{ key: "course_id", label: "Course", type: "reference", reference: "courses", required: true }, { key: "academic_term_id", label: "Academic term", type: "reference", reference: "terms", required: true }, { key: "instructor_id", label: "Instructor user ID", type: "number", required: true }, { key: "section", label: "Section", required: true }, { key: "schedule", label: "Schedule", required: true }, { key: "room", label: "Room", required: true }, { key: "capacity", label: "Capacity", type: "number", min: 1, max: 500, required: true }, status],
-    notes: "The API does not provide Staff with an instructor directory. Use only a verified instructor user ID; administrators can verify IDs in the Users API.",
+    fields: [{ key: "course_id", label: "Course", type: "reference", reference: "courses", required: true }, { key: "academic_term_id", label: "Academic term", type: "reference", reference: "terms", required: true }, { key: "instructor_id", label: "Instructor", type: "reference", reference: "instructors", required: true }, { key: "section", label: "Section", required: true }, { key: "schedule", label: "Schedule", required: true }, { key: "room", label: "Room", required: true }, { key: "capacity", label: "Capacity", type: "number", min: 1, max: 500, required: true }, status],
   },
   enrollments: {
     key: "enrollments", title: "Enrollments", singular: "enrollment", description: "Student registration in scheduled course offerings.", service: enrollmentsService,

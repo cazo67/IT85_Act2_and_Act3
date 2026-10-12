@@ -32,14 +32,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [clearSession])
 
   React.useEffect(() => {
-    if (!tokenStore.get()) {
+    const sessionToken = tokenStore.get()
+    if (!sessionToken) {
       return
     }
+    const controller = new AbortController()
+    let active = true
     authService
-      .me()
-      .then((response) => setUser(response.data))
-      .catch(clearSession)
-      .finally(() => setChecking(false))
+      .me(controller.signal)
+      .then((response) => {
+        if (active && tokenStore.get() === sessionToken) setUser(response.data)
+      })
+      .catch(() => {
+        if (
+          active &&
+          !controller.signal.aborted &&
+          tokenStore.get() === sessionToken
+        )
+          clearSession()
+      })
+      .finally(() => {
+        if (active) setChecking(false)
+      })
+    // Unmount/Strict Mode cleanup cancels this check; cancellation is not logout.
+    return () => {
+      active = false
+      controller.abort()
+    }
   }, [clearSession])
 
   const login = React.useCallback(async (email: string, password: string) => {
@@ -57,7 +76,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [clearSession])
 
-  const value = React.useMemo(() => ({ user, isChecking, login, logout }), [user, isChecking, login, logout])
+  const value = React.useMemo(
+    () => ({ user, isChecking, login, logout }),
+    [user, isChecking, login, logout]
+  )
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 

@@ -10,13 +10,16 @@ import { DashboardPage } from "@/features/dashboard/dashboard-page"
 import { ProfilePage } from "@/features/profile/profile-page"
 import { ResourcePage } from "@/features/resources/resource-page"
 import { resources } from "@/features/resources/resource-definitions"
+import { OfferingWorkspace } from "@/features/workflows/offering-workspace"
+import { StudentWorkspace } from "@/features/workflows/student-workspace"
+import { UsersPage } from "@/features/users/users-page"
 
 function ErrorPage({ code, title, message }: { code: string; title: string; message: string }) {
   return <main className="grid min-h-[70svh] place-items-center p-4"><Card className="max-w-lg p-8 text-center"><p className="text-sm font-medium text-primary">{code}</p><h1 className="mt-2 text-2xl font-semibold">{title}</h1><p className="mt-2 text-sm text-muted-foreground">{message}</p><Button className="mt-6" asChild><a href="/dashboard">Return to dashboard</a></Button></Card></main>
 }
 
 function ResourceRoute({ name }: { name: keyof typeof resources }) {
-  return <ResourcePage definition={resources[name]} />
+  return <ResourcePage key={name} definition={resources[name]} />
 }
 
 export const router = createBrowserRouter([
@@ -26,10 +29,13 @@ export const router = createBrowserRouter([
     { index: true, element: <Navigate to="/dashboard" replace /> },
     { path: "/dashboard", element: <DashboardPage /> },
     { path: "/students", element: <ResourceRoute name="students" /> },
+    { path: "/students/:studentId", element: <StudentWorkspace /> },
+    { path: "/users", element: <UsersPage /> },
     { path: "/programs", element: <ResourceRoute name="programs" /> },
     { path: "/courses", element: <ResourceRoute name="courses" /> },
     { path: "/academic-terms", element: <ResourceRoute name="academic-terms" /> },
     { path: "/course-offerings", element: <ResourceRoute name="course-offerings" /> },
+    { path: "/course-offerings/:offeringId", element: <OfferingWorkspace /> },
     { path: "/enrollments", element: <ResourceRoute name="enrollments" /> },
     { path: "/grades", element: <ResourceRoute name="grades" /> },
     { path: "/academic-record", element: <AcademicRecordPage /> },

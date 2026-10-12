@@ -30,3 +30,6 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+
+# Demo recording output
+demo-output/

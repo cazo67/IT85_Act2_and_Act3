@@ -79,7 +79,7 @@ export async function apiRequest<T>(
 
   if (!response.ok || body.success === false) {
     const failure = body as ApiFailureBody
-    if (response.status === 401 && token) unauthorizedHandler?.()
+    if (response.status === 401 && token && tokenStore.get() === token) unauthorizedHandler?.()
     throw new ApiError(failure.message || "Request failed.", {
       status: response.status,
       kind: kindForStatus(response.status),

@@ -7,6 +7,7 @@ import type {
   CourseOffering,
   Enrollment,
   Grade,
+  InstructorDirectoryEntry,
   Program,
   Student,
   User,
@@ -21,7 +22,7 @@ export const authService = {
       { method: "POST", body: JSON.stringify({ email, password }) }
     ),
   logout: () => apiRequest<null>("/auth/logout", { method: "POST" }),
-  me: () => apiRequest<User>("/auth/me"),
+  me: (signal?: AbortSignal) => apiRequest<User>("/auth/me", { signal }),
 }
 
 export function resourceService<T>(path: string) {
@@ -42,6 +43,10 @@ export function resourceService<T>(path: string) {
 }
 
 export const usersService = resourceService<User>("/users")
+export const instructorsService = {
+  list: (query: Record<string, unknown> = {}, signal?: AbortSignal) =>
+    apiRequest<InstructorDirectoryEntry[]>(`/directories/instructors${toQuery(query)}`, { signal }),
+}
 export const programsService = resourceService<Program>("/programs")
 export const studentsService = resourceService<Student>("/students")
 export const coursesService = resourceService<Course>("/courses")

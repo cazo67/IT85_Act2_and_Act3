@@ -23,5 +23,9 @@ Base URL: `VITE_API_BASE_URL` (example: `http://127.0.0.1:8000/api/v1`). Protect
 | Grade detail | GET / PATCH | `/grades/{id}` | Scoped read; A/S/assigned I edit |
 | Student grades | GET | `/students/{id}/grades` | Object-scoped |
 | Academic record | GET | `/students/{id}/academic-record` | A/S any, I assigned, Student own |
+| Admin Users page | GET / POST / PATCH | `/users`, `/users/{id}` | ADMIN only; email immutable on update; no delete endpoint |
+| Instructor assignment selector | GET | `/directories/instructors` | ADMIN/STAFF only; paginated ID/name/role/status, no email/password data |
+| Class roster workspace | GET | Existing offering, offering students, enrollments, grades, course and term endpoints | A/S or assigned I; joins all authorized pages by IDs; Student cannot open roster |
+| Student workspace / deep-linked history | GET | `/students/{id}/academic-record` | Existing ownership and instructor assignment checks |
 
 Success: `{ success, message, data, meta? }`. Error: `{ success: false, message, errors }`. Pagination: `{ page, per_page, total, last_page }`. Deletes return 204 without JSON.
